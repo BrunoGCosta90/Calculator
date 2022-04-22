@@ -1,6 +1,9 @@
 let operator;
 let x;
 let y = 0;
+const displayOld = document.querySelector('.display-old');
+const displayCurrent = document.querySelector('.display-current');
+const dot = document.querySelector('.float');
 
 const grabButton = document.querySelectorAll('button');
 grabButton.forEach(button => 
@@ -8,9 +11,7 @@ grabButton.forEach(button =>
 );
 
 function calculatorEngine(char){
-    const displayOld = document.querySelector('.display-old');
-    const displayCurrent = document.querySelector('.display-current');
-    //console.log(char);
+    
     
     switch(char){
         case 'AC':
@@ -19,15 +20,21 @@ function calculatorEngine(char){
             operator = undefined;
             x = 0;
             y = 0;
+            dot.disabled = false;
             break;
+            
         case 'C':
+
             displayCurrent.textContent = displayCurrent.textContent.slice(0, -1);
+            
             if(operator != undefined){
                 y = displayCurrent.textContent;
             }
             if(displayCurrent.textContent == ''){
                 displayCurrent.textContent = "0";
             }
+            
+            testForFloat(displayCurrent);
             break;
         case '9':
         case '8':
@@ -47,11 +54,8 @@ function calculatorEngine(char){
             } else {
                 displayOld.textContent = `${x}` + ' ' + `${operator}`;
                 if(displayCurrent.textContent.length < 15){
-                    if(y == 0){
-                        y = '';
-                    }
-                    y += char;
-                    displayCurrent.textContent = y;
+                    displayCurrent.textContent += char;
+                    y = displayCurrent.textContent;
                 }
             }
             break;
@@ -62,11 +66,18 @@ function calculatorEngine(char){
         case '*':
             operator = char;
             x = displayCurrent.textContent;
-            console.log(x);
+            displayOld.textContent = displayCurrent.textContent + ` ${char}`;
+            displayCurrent.textContent = 0;
+
+            dot.disabled = false;
             break;        
         case '.':
-
-   
+            if(testForFloat(displayCurrent) == false){
+                if(displayCurrent.textContent == ''){displayCurrent.textContent = '0';}
+                displayCurrent.textContent += '.';
+                dot.disabled = true;
+            };
+            break;
         case '=':
             if(x != '' && y != '' && operator != undefined){
                 x = Number(x);
@@ -75,10 +86,12 @@ function calculatorEngine(char){
                     alert("Can't divide by zero!");
                     break;
                 }
-                displayOld.textContent += ' ' + displayCurrent.textContent;
-                displayCurrent.textContent = operate(operator, x, y);
+                displayOld.textContent += ` ${displayCurrent.textContent}`;
+                displayCurrent.textContent = Math.round(operate(operator, x, y) * 100) / 100;
                 x = displayCurrent.textContent;
                 y = '';
+                dot.disable = false;
+                break;
             }
         default:
             break;
@@ -86,7 +99,6 @@ function calculatorEngine(char){
     if(displayCurrent.textContent == ""){
         displayCurrent.textContent = "0";
     }
-    console.log(operator);
 }
 
 function operate(operator, x, y){
@@ -112,7 +124,7 @@ function operate(operator, x, y){
 }
 
 function add(x,y){
-    return ((x * 10) + (y * 10))/ 10;
+    return ((x * 100) + (y * 100))/ 100;
 }
 
 function multiply(x,y){
@@ -129,4 +141,19 @@ function subtract(x,y){
 
 function percentage(x,y){
     return x * (y/100);
+}
+
+function testForFloat(text){
+
+    for(let i in text.textContent){
+        
+        if(text.textContent[i] == '.'){
+            dot.disable = true;
+            return true;
+        }
+        
+    }
+    dot.disabled = false;
+    return false;
+    
 }

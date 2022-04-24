@@ -64,6 +64,11 @@ body {
     font-size: 1.325rem;
 }
 
+button:hover {
+    opacity: 70%;
+    transition: 0.4s;
+}
+
 .ac {
     background-color: rgb(230, 56, 56);
 }
@@ -76,16 +81,17 @@ body {
     background-color: rgb(11, 120, 245);
 }
 
-.number {
+/* .number {
     background-color: rgb(20, 204, 45);
-}
+} */
 
-.float {
+/* .float {
     background-color: rgb(52, 248, 78);
-}
+} */
+
 .equals {
     grid-column: 3 / 5;
-    background-color: blanchedalmond;
+    background-color: rgb(20, 204, 45);
 }
 
 .footer{
